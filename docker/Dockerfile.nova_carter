@@ -1,0 +1,54 @@
+#####################################################################################
+# Copyright (c) 2021, NVIDIA CORPORATION. All rights reserved.
+# NVIDIA CORPORATION and its licensors retain all intellectual property
+# and proprietary rights in and to this software, related documentation
+# and any modifications thereto. Any use, reproduction, disclosure or
+# distribution of this software and related documentation without an express
+# license agreement from NVIDIA CORPORATION is strictly prohibited.
+#####################################################################################
+
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+# Install prerequisites for nova_carter
+RUN apt-get update && apt-get install -y \
+    bc \
+    libpcl-dev \
+    libpcap-dev \
+    libboost-dev \
+    libgeographic-dev \
+&& rm -rf /var/lib/apt/lists/* \
+&& apt-get clean
+
+# Install spatio_temporal_voxel_layer dependencies
+RUN apt-get update && apt-get install -y \    
+	libopenvdb-dev \
+	libopenvdb6.2 \
+	libopenexr-dev \
+    ros-humble-nav2-costmap-2d \
+	ros-humble-pcl-conversions \
+    ros-humble-twist-mux \ 
+    ros-humble-joy-linux \ 
+    ros-humble-teleop-twist-joy \
+    ros-humble-nav2* \
+    ros-humble-nav2-bringup \
+    ros-humble-geographic-msgs \
+&& rm -rf /var/lib/apt/lists/* \
+&& apt-get clean
+
+RUN curl -o /etc/ros/rosdep/sources.list.d/nvidia-isaac.yaml https://urm.nvidia.com/artifactory/sw-isaac-ros-generic-local/extra_rosdeps.yaml \
+    && echo "yaml file:///etc/ros/rosdep/sources.list.d/nvidia-isaac.yaml" | tee /etc/ros/rosdep/sources.list.d/00-nvidia-isaac.list \
+    && rosdep update
+
+# Install spatio_temporal_voxel_layer from source
+RUN apt-get update && mkdir -p ${ROS_ROOT}/src && cd ${ROS_ROOT}/src \
+    && git clone https://github.com/SteveMacenski/spatio_temporal_voxel_layer.git && cd spatio_temporal_voxel_layer && git checkout ros2 \
+    && source ${ROS_ROOT}/setup.bash \
+    && bloom-generate rosdebian && sed -i 's/nav2-costmap-2d/ros-humble-nav2-costmap-2d/g' debian/rules && fakeroot debian/rules binary \
+    && cd ../ && apt-get install -y ./*.deb && rm ./*.deb \
+&& rm -rf /var/lib/apt/lists/* \
+&& apt-get clean
+
+# Install and setup cyclone DDS
+RUN apt-get update && apt-get install -y ros-humble-rmw-cyclonedds-cpp
+ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
