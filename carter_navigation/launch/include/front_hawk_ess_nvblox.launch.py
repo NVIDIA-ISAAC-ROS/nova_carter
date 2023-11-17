@@ -19,15 +19,19 @@ import os
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch_ros.actions import LoadComposableNodes, Node
+from launch.actions import DeclareLaunchArgument, OpaqueFunction
+from launch_ros.actions import LoadComposableNodes
 from launch_ros.descriptions import ComposableNode
+from launch.substitutions import LaunchConfiguration
 
 
-def generate_launch_description():
+def launch_setup(context):
     # Check if ESS model is available
-    models_dir_path = os.path.dirname(
-        os.path.realpath(__file__))+'/../../models'
-    engine_file_path = models_dir_path+'/ess.engine'
+    engine_file_path = LaunchConfiguration('engine_file_path').perform(context)
+    if not engine_file_path:
+        models_dir_path = os.path.dirname(
+            os.path.realpath(__file__))+'/../../models'
+        engine_file_path = models_dir_path+'/ess.engine'
     if not os.path.isfile(engine_file_path):
         raise Exception(
             f'ESS engine file not found at : {engine_file_path}.'
@@ -170,4 +174,14 @@ def generate_launch_description():
         ]
     )
 
-    return LaunchDescription([load_hawk_ess_nvblox])
+    return [load_hawk_ess_nvblox]
+
+def generate_launch_description():
+    launch_args = [
+        DeclareLaunchArgument(
+            'engine_file_path',
+            default_value='',
+            description='The absolute path to the ESS engine plan.')
+    ]
+    return LaunchDescription(
+        launch_args + [OpaqueFunction(function=launch_setup)])

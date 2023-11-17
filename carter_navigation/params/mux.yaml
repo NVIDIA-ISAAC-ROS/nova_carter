@@ -9,3 +9,7 @@ twist_mux:
         topic: cmd_vel
         timeout: 0.5
         priority: 50
+      virtual_joy:
+        topic: virtual_joy/cmd_vel
+        timeout: 0.5
+        priority: 60

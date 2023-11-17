@@ -1,0 +1,137 @@
+{
+  "configById": {
+    "Image!hcyx98": {
+      "cameraState": {
+        "distance": 20,
+        "perspective": true,
+        "phi": 60,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 45,
+        "fovy": 45,
+        "near": 0.5,
+        "far": 5000
+      },
+      "followMode": "follow-pose",
+      "scene": {},
+      "transforms": {},
+      "topics": {
+        "/plan": {
+          "visible": false
+        },
+        "/trajectories": {
+          "visible": false
+        },
+        "/back/scan": {
+          "visible": false
+        },
+        "/front/scan": {
+          "visible": false
+        },
+        "/scan": {
+          "visible": false
+        },
+        "/global_costmap/costmap": {
+          "visible": false
+        },
+        "/local_costmap/costmap": {
+          "visible": false
+        },
+        "/map": {
+          "visible": false
+        },
+        "/local_costmap/voxel_grid": {
+          "visible": false
+        },
+        "/pointcloud": {
+          "visible": false
+        },
+        "/global_costmap/published_footprint": {
+          "visible": false
+        },
+        "/local_costmap/published_footprint": {
+          "visible": false
+        },
+        "/amcl_pose": {
+          "visible": false
+        },
+        "/goal_pose": {
+          "visible": false
+        },
+        "/initialpose": {
+          "visible": false
+        },
+        "/move_base_simple/goal": {
+          "visible": false
+        },
+        "/plan_smoothed": {
+          "visible": false
+        },
+        "/transformed_global_plan": {
+          "visible": false
+        },
+        "/unsmoothed_plan": {
+          "visible": false
+        }
+      },
+      "layers": {},
+      "publish": {
+        "type": "point",
+        "poseTopic": "/move_base_simple/goal",
+        "pointTopic": "/clicked_point",
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseEstimateThetaDeviation": 0.26179939
+      },
+      "imageMode": {
+        "imageTopic": "/owl_front/left/image_resized"
+      }
+    },
+    "Teleop!2422nyg": {
+      "topic": "/virtual_joy/cmd_vel",
+      "publishRate": 1,
+      "upButton": {
+        "field": "linear-x",
+        "value": 0.5
+      },
+      "downButton": {
+        "field": "linear-x",
+        "value": -0.5
+      },
+      "leftButton": {
+        "field": "angular-z",
+        "value": 0.5
+      },
+      "rightButton": {
+        "field": "angular-z",
+        "value": -0.5
+      }
+    }
+  },
+  "globalVariables": {},
+  "userNodes": {},
+  "playbackConfig": {
+    "speed": 1
+  },
+  "layout": {
+    "first": "Image!hcyx98",
+    "second": "Teleop!2422nyg",
+    "direction": "row",
+    "splitPercentage": 79.62239583333334
+  }
+}

@@ -90,6 +90,10 @@ components:
   parameters:
     transmitter: tx_ego_motion
     recess_period: 100Hz
+- type: nvidia::gxf::MemoryAvailableSchedulingTerm
+  parameters:
+    allocator: allocator
+    min_blocks: 1
 ---
 name: sink_odometry
 components:
