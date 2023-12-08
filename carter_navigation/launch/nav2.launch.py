@@ -42,7 +42,7 @@ def generate_launch_description():
     launch_owls_arg = DeclareLaunchArgument('launch_owls', default_value=launch_owls,
                                             description='Launch Owl Cameras')
     launch_nvblox_pipeline = LaunchConfiguration(
-        'launch_nvblox_pipeline', default=False)
+        'launch_nvblox_pipeline', default=True)
     launch_nvblox_pipeline_arg = DeclareLaunchArgument(
         'launch_nvblox_pipeline', default_value=launch_nvblox_pipeline,
         description='Launch Hawk Camera + ESS Depth + Isaac ROS Nvblox')
@@ -141,6 +141,7 @@ def generate_launch_description():
         name='carter_container',
         package='rclcpp_components',
         executable='component_container_isolated',
+        prefix="nice -n 2",
         parameters=[params_file],
         output='screen')
 

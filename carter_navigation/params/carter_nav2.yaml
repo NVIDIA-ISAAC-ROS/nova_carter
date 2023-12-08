@@ -383,7 +383,7 @@ local_costmap:
         enabled: True
         max_obstacle_distance: 1.0
         inflation_distance: 0.4
-        nvblox_map_slice_topic: "/nvblox_node/map_slice"
+        nvblox_map_slice_topic: "/hawk_front/nvblox_node/static_map_slice"
       always_send_full_costmap: True
 
 global_costmap:
@@ -474,7 +474,7 @@ global_costmap:
         enabled: True
         max_obstacle_distance: 1.0
         inflation_distance: 0.4
-        nvblox_map_slice_topic: "/nvblox_node/map_slice"
+        nvblox_map_slice_topic: "/hawk_front/nvblox_node/static_map_slice"
       always_send_full_costmap: True
 
 map_server:

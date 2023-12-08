@@ -142,7 +142,13 @@ def launch_setup(context):
         ]
     )
 
-    nvblox_config = os.path.join(
+    nvblox_base_config = os.path.join(
+        get_package_share_directory('nvblox_examples_bringup'), 
+        'config', 
+        'nvblox', 
+        'nvblox_base.yaml'
+    )
+    nvblox_carter_config = os.path.join(
         get_package_share_directory('carter_navigation'),
         'params',
         'nvblox_carter.yaml'
@@ -157,7 +163,7 @@ def launch_setup(context):
                     ('depth/camera_info', 'left/camera_info_resized'),
                     ('color/image', 'left/image_resized'),
                     ('color/camera_info', 'left/camera_info_resized')],
-        parameters=[nvblox_config]
+        parameters=[nvblox_base_config, nvblox_carter_config]
     )
 
     load_hawk_ess_nvblox = LoadComposableNodes(

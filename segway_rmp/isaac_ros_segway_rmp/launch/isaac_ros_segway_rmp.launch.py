@@ -24,12 +24,19 @@ def generate_launch_description():
     segway_rmp_node = ComposableNode(
         package='isaac_ros_segway_rmp',
         plugin='nvidia::isaac_ros::segway_rmp::SegwayRMPNode',
-        name='segway_rmp')
+        name='segway_rmp',
+        parameters=[{
+                'enable_statistics': True,
+                'topics_list': ['odom'],
+                'expected_fps_list': [40.0],
+                'jitter_tolerance_us': 200000 
+            }])
 
     segway_rmp_container = ComposableNodeContainer(
         package='rclcpp_components',
         name='segway_rmp_container',
         namespace='',
+        prefix="nice -n 1",
         executable='component_container_mt',
         composable_node_descriptions=[
             segway_rmp_node,
