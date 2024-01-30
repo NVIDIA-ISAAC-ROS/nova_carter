@@ -38,7 +38,7 @@ RUN apt-get update && apt-get install -y \
 
 # Install spatio_temporal_voxel_layer from source
 RUN apt-get update && mkdir -p ${ROS_ROOT}/src && cd ${ROS_ROOT}/src \
-    && git clone https://github.com/SteveMacenski/spatio_temporal_voxel_layer.git && cd spatio_temporal_voxel_layer && git checkout ros2 \
+    && git clone https://github.com/SteveMacenski/spatio_temporal_voxel_layer.git && cd spatio_temporal_voxel_layer && git checkout 6ade4fe4164576d4356ca92b1cd258c71930b1f4 \
     && source ${ROS_ROOT}/setup.bash \
     && bloom-generate rosdebian && sed -i 's/nav2-costmap-2d/ros-humble-nav2-costmap-2d/g' debian/rules && fakeroot debian/rules binary \
     && cd ../ && apt-get install -y ./*.deb && rm ./*.deb \
