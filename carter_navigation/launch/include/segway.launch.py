@@ -29,13 +29,7 @@ def generate_launch_description():
         name='segway_rmp',
         remappings=[
             ('/cmd_vel', '/mux/cmd_vel')
-        ],
-        parameters=[{
-                'enable_statistics': True,
-                'topics_list': ['odom'],
-                'expected_fps_list': [40.0],
-                'jitter_tolerance_us': 50000
-            }]
+        ]
     )
 
     segway_rmp_container = ComposableNodeContainer(
