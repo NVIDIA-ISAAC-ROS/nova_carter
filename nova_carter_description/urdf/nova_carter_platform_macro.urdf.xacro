@@ -1,0 +1,313 @@
+<?xml version="1.0"?>
+<!--
+Copyright (c) 2024, NVIDIA CORPORATION. All rights reserved.
+
+NVIDIA CORPORATION and its licensors retain all intellectual property
+and proprietary rights in and to this software, related documentation
+and any modifications thereto. Any use, reproduction, disclosure or
+distribution of this software and related documentation without an express
+license agreement from NVIDIA CORPORATION is strictly prohibited.
+-->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!--
+  Definition of the nova_carter_platform macro
+
+  Parameters:
+    - origin: Origin of the transformation connecting the root of this macro with parent link.
+    - name: The nova carter platform name. Default value: "nova_carter" (name and root link).
+    - parent: Parent link where the root of this macro will be connected with a joint.
+              Default value: base_link
+  -->
+  <xacro:macro name="nova_carter_platform" params="*origin name=nova_carter parent=base_link
+    mount_is_root:=false">
+
+    <!-- Constants -->
+    <xacro:property name="M_PI" value="3.1415926535897931"/>
+
+    <!-- Platform's root link -->
+    <xacro:property name="root_link" value="${name}"/>
+
+    <!-- Joints defining the platform structure -->
+    <joint name="joint_swing_left" type="continuous">
+      <origin xyz="0.132296 0.031188 0.000002" rpy="0.0 0.0 ${-M_PI/2}"/>
+      <parent link="${name}_caster_frame_base"/>
+      <child link="caster_swivel_left"/>
+      <axis xyz="1.0 0.0 0.0"/>
+      <dynamics damping="0.01" friction="0.1"/>
+    </joint>
+    <joint name="joint_swing_right" type="continuous">
+      <origin xyz="-0.1322037 0.0311879 0.0000001" rpy="0.0 0.0 ${-M_PI/2}"/>
+      <parent link="${name}_caster_frame_base"/>
+      <child link="caster_swivel_right"/>
+      <axis xyz="1.0 0.0 0.0"/>
+      <dynamics damping="0.01" friction="0.1"/>
+    </joint>
+    <joint name="joint_wheel_left" type="continuous">
+      <origin xyz="0.0 0.1726 0.14" rpy="${-M_PI/2} 0.0 0.0"/>
+      <parent link="${root_link}"/>
+      <child link="wheel_left"/>
+      <axis xyz="0.0 0.0 1.0"/>
+      <dynamics damping="0.01" friction="0.1"/>
+    </joint>
+    <joint name="joint_wheel_right" type="continuous">
+      <origin xyz="0.0 -0.1726 0.14" rpy="${-M_PI/2} 0.0 0.0"/>
+      <parent link="${root_link}"/>
+      <child link="wheel_right"/>
+      <axis xyz="0.0 0.0 1.0"/>
+      <dynamics damping="0.01" friction="0.1"/>
+    </joint>
+    <joint name="joint_caster_base" type="revolute">
+      <origin xyz="-0.47195 0.0 0.22289" rpy="${-M_PI/2} 0.0 ${M_PI/2}"/>
+      <parent link="${root_link}"/>
+      <child link="${name}_caster_frame_base"/>
+      <axis xyz="0.0 0.0 1.0"/>
+      <limit lower="-0.0349066" upper="0.0349066" effort="100000000.0" velocity="0.0"/>
+      <dynamics damping="10.0" friction="10.0"/>
+    </joint>
+    <joint name="joint_caster_left" type="continuous">
+      <origin xyz="-0.1153999 -0.0230851 0.0399971" rpy="${M_PI/2} ${-M_PI/2} 0.0"/>
+      <parent link="caster_swivel_left"/>
+      <child link="caster_wheel_left"/>
+      <axis xyz="0.0 0.0 1.0"/>
+      <dynamics damping="0.1" friction="0.1"/>
+    </joint>
+    <joint name="joint_caster_right" type="continuous">
+      <origin xyz="-0.1154 -0.022989 0.039999" rpy="${M_PI/2} ${-M_PI/2} 0.0"/>
+      <parent link="caster_swivel_right"/>
+      <child link="caster_wheel_right"/>
+      <axis xyz="0.0 0.0 1.0"/>
+      <dynamics damping="0.1" friction="0.1"/>
+    </joint>
+    <joint name="${name}_joint" type="fixed">
+      <xacro:insert_block name="origin"/>
+        <parent link="${parent}"/>
+        <child link="${root_link}"/>
+    </joint>
+
+    <!-- Links and Meshes -->
+    <link name="caster_swivel_left">
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <mass value="0.34581223130226135"/>
+        <inertia ixx="0.000165319" ixy="0.0" ixz="0.0" iyy="0.000474739" iyz="0.0" izz="0.000460723"/>
+      </inertial>
+      <visual>
+        <origin xyz="-0.000002 0.000004 -0.000002" rpy="0.0 0.0 0.0"/>
+        <geometry>
+          <mesh filename="package://nova_carter_description/meshes/caster_swivel.obj"/>
+        </geometry>
+      </visual>
+    </link>
+    <link name="caster_swivel_right">
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <mass value="0.34581223130226135"/>
+        <inertia ixx="0.000165319" ixy="0.0" ixz="0.0" iyy="0.000474739" iyz="0.0" izz="0.000460723"/>
+      </inertial>
+      <visual>
+        <origin xyz="-0.0000021 0.0 -0.0000001" rpy="0.0 0.0 0.0"/>
+        <geometry>
+          <mesh filename="package://nova_carter_description/meshes/caster_swivel.obj"/>
+        </geometry>
+      </visual>
+    </link>
+    <link name="caster_wheel_left">
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <mass value="0.1"/>
+        <inertia ixx="0.000147704" ixy="0.0" ixz="0.0" iyy="0.000147704" iyz="0.0" izz="0.000285012"/>
+      </inertial>
+      <visual>
+        <origin xyz="0.0 -0.000005 -0.023039" rpy="${M_PI} 0.0 0.0"/>
+        <geometry>
+          <mesh filename="package://nova_carter_description/meshes/caster_wheel.obj"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0.0000001 -0.0000045 -0.0230392" rpy="${M_PI} 0.0 0.0"/>
+        <geometry>
+          <cylinder radius="0.0755" length="0.025"/>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1.0</mu>
+              <mu2>1.0</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+    </link>
+    <link name="caster_wheel_right">
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <mass value="0.1"/>
+        <inertia ixx="0.000147704" ixy="0.0" ixz="0.0" iyy="0.000147704" iyz="0.0" izz="0.000285012"/>
+      </inertial>
+      <visual>
+        <origin xyz="0.0 -0.000005 -0.0230391" rpy="${M_PI} 0.0 0.0"/>
+        <geometry>
+          <mesh filename="package://nova_carter_description/meshes/caster_wheel.obj"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0.0 -0.0000046 -0.0230391" rpy="${M_PI} 0.0 0.0"/>
+        <geometry>
+          <cylinder radius="0.0755" length="0.025"/>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1.0</mu>
+              <mu2>1.0</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+    </link>
+    <link name="${root_link}">
+      <inertial>
+        <origin xyz="-0.209765 0.0 0.282844" rpy="0.0 0.0 0.0"/>
+        <mass value="52.90850067138672"/>
+        <inertia ixx="0.969161" ixy="0.0" ixz="0.0" iyy="2.39801" iyz="0.0" izz="2.5126"/>
+      </inertial>
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <geometry>
+          <mesh filename="package://nova_carter_description/meshes/chassis_link.obj"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <geometry>
+          <mesh filename="package://nova_carter_description/meshes/chassis_link.obj"/>
+        </geometry>    
+      </collision>
+    </link>
+    <link name="${name}_caster_frame_base">
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <mass value="1.687524437904358"/>
+        <inertia ixx="0.00163336" ixy="0.0" ixz="0.0" iyy="0.0136019" iyz="0.0" izz="0.01298"/>
+      </inertial>
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <geometry>
+          <mesh filename="package://nova_carter_description/meshes/caster_frame_base.obj"/>
+        </geometry>
+      </visual>
+    </link>
+    <link name="wheel_left">
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <mass value="1.0"/>
+        <inertia ixx="0.00389878" ixy="0.0" ixz="0.0" iyy="0.00389878" iyz="0.0" izz="0.00712177"/>
+      </inertial>
+      <visual>
+        <origin xyz="-0.0 0.0 0.034" rpy="0.0 0.0 0.0"/>
+        <geometry>
+          <mesh filename="package://nova_carter_description/meshes/nova_carter_wheel_left.obj"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="-0.0 0.0 0.034" rpy="${M_PI} 0.0 -0.5235988"/>
+        <geometry>
+          <cylinder radius="0.14" length="0.02"/>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1.0</mu>
+              <mu2>1.0</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+      <collision>
+        <origin xyz="-0.0 0.0 0.034" rpy="${M_PI} 0.0 -0.5235988"/>
+        <geometry>
+          <cylinder radius="0.125" length="0.06"/>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1.0</mu>
+              <mu2>1.0</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+      <collision>
+        <origin xyz="-0.0 0.0 0.034" rpy="${M_PI} 0.0 -0.5235988"/>
+        <geometry>
+          <cylinder radius="0.1" length="0.08"/>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1.0</mu>
+              <mu2>1.0</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+    </link>
+    <link name="wheel_right">
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <mass value="1.0"/>
+        <inertia ixx="0.00389878" ixy="0.0" ixz="0.0" iyy="0.00389878" iyz="0.0" izz="0.00712177"/>
+      </inertial>
+      <visual>
+        <origin xyz="-0.0 0.0 -0.034" rpy="0.0 0.0 0.0"/>
+        <geometry>
+          <mesh filename="package://nova_carter_description/meshes/nova_carter_wheel_left.obj"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="-0.0 0.0 -0.034" rpy="0.0 0.0 -2.6179938"/>
+        <geometry>
+          <cylinder radius="0.14" length="0.02"/>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1.0</mu>
+              <mu2>1.0</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+      <collision>
+        <origin xyz="-0.0 0.0 -0.034" rpy="0.0 0.0 -2.6179938"/>
+        <geometry>
+          <cylinder radius="0.125" length="0.06"/>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1.0</mu>
+              <mu2>1.0</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+      <collision>
+        <origin xyz="-0.0 0.0 -0.034" rpy="0.0 0.0 -2.6179938"/>
+        <geometry>
+          <cylinder radius="0.1" length="0.08"/>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1.0</mu>
+              <mu2>1.0</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+    </link>
+
+  </xacro:macro>
+</robot>

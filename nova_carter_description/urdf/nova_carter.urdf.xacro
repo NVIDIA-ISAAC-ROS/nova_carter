@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<!--
+Copyright (c) 2024, NVIDIA CORPORATION. All rights reserved.
+
+NVIDIA CORPORATION and its licensors retain all intellectual property
+and proprietary rights in and to this software, related documentation
+and any modifications thereto. Any use, reproduction, disclosure or
+distribution of this software and related documentation without an express
+license agreement from NVIDIA CORPORATION is strictly prohibited.
+-->
+<robot name="please_specify_carter_id_name" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:arg name="robot_namespace" default="/"/> 
+
+  <!-- Includes -->
+  <xacro:include filename="$(find hawk_description)/urdf/hawk_macro.urdf.xacro"/>
+  <xacro:include filename="$(find owl_description)/urdf/owl_macro.urdf.xacro"/>
+  <xacro:include filename="$(find pandar_xt32_description)/urdf/pandar_xt32_macro.urdf.xacro"/>
+  <xacro:include filename="$(find rplidar_s2e_description)/urdf/rplidar_s2e_macro.urdf.xacro"/>
+  <xacro:include filename="$(find nova_carter_description)/urdf/nova_carter_platform_macro.urdf.xacro"/>
+
+  <!-- Constants -->
+  <xacro:property name="M_PI" value="3.1415926535897931"/>
+
+  <!-- Platform Structure -->
+  <!-- Main link of Nova Carter: Origin is at center of rotation on the ground (centered between
+  two large wheels) -->
+  <link name="base_link"/>
+  <xacro:nova_carter_platform name="nova_carter" parent="base_link">
+    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+  </xacro:nova_carter_platform>
+
+  <!-- Stereo cameras  -->
+  <xacro:hawk_camera name="front_stereo" parent="base_link">
+    <origin xyz="0.100300 0.075000 0.344400" rpy="0.0 0.0 0.0"/>
+  </xacro:hawk_camera>
+
+  <xacro:hawk_camera name="left_stereo" parent="base_link">
+    <origin xyz="-0.430400 0.150000 0.344400" rpy="0.0 0.0 ${M_PI/2}"/>
+  </xacro:hawk_camera>
+
+  <xacro:hawk_camera name="right_stereo" parent="base_link">
+    <origin xyz="-0.280400 -0.150000 0.344400" rpy="0.0 0.0 ${-M_PI/2}"/>
+  </xacro:hawk_camera>
+
+  <xacro:hawk_camera name="back_stereo" parent="base_link">
+    <origin xyz="-0.563700 -0.075000 0.344400" rpy="0.0 0.0 ${M_PI}"/>
+  </xacro:hawk_camera>
+
+  <!-- Fisheye cameras  -->
+  <xacro:owl_camera name="front_fisheye" parent="base_link">
+    <origin xyz="0.107300 0.0 0.374400" rpy="0.0 0.0 0.0"/>
+  </xacro:owl_camera>
+
+  <xacro:owl_camera name="left_fisheye" parent="base_link">
+    <origin xyz="-0.231700 0.157100 0.344400" rpy="0.0 0.0 ${M_PI/2}"/>
+  </xacro:owl_camera>
+
+  <xacro:owl_camera name="right_fisheye" parent="base_link">
+    <origin xyz="-0.231700 -0.157100 0.344400" rpy="0.0 0.0 ${-M_PI/2}"/>
+  </xacro:owl_camera>
+
+  <xacro:owl_camera name="back_fisheye" parent="base_link">
+    <origin xyz="-0.570700 0.0 0.374400" rpy="0.0 0.0 ${M_PI}"/>
+  </xacro:owl_camera>
+
+  <!-- 3D LIDAR -->
+  <xacro:pandar_xt32_lidar name="front" parent="base_link">
+    <origin xyz="-0.231700 0.0 0.526300" rpy="0.0 0.0 0.0"/>
+  </xacro:pandar_xt32_lidar>
+
+  <!-- 2D LIDARs -->
+  <xacro:rplidar_s2e_lidar name="front" parent="base_link">
+    <origin xyz="0.026000 0.0 0.418000" rpy="0.0 0.0 ${M_PI}"/>
+  </xacro:rplidar_s2e_lidar>
+
+  <xacro:rplidar_s2e_lidar name="back" parent="base_link">
+    <origin xyz="-0.489400 0.0 0.418000" rpy="0.0 0.0 0.0"/>
+  </xacro:rplidar_s2e_lidar>
+
+  <!-- Chassis IMU -->
+  <link name="chassis_imu"/>
+  <joint name="chassis_imu_joint" type="fixed">
+      <origin xyz="-0.218480 0.024460 0.156430" rpy="0.0 0.0 0.0"/>
+      <parent link="base_link"/>
+      <child link="chassis_imu"/>
+  </joint>
+
+</robot>

@@ -1,0 +1,201 @@
+{
+  "configById": {
+    "Image!2757qnp": {
+      "cameraState": {
+        "distance": 20,
+        "far": 5000,
+        "fovy": 45,
+        "near": 0.5,
+        "perspective": true,
+        "phi": 60,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 45
+      },
+      "followMode": "follow-pose",
+      "imageMode": {
+        "imageTopic": "/owl_left/left/image_resized"
+      },
+      "layers": {},
+      "publish": {
+        "pointTopic": "/clicked_point",
+        "poseEstimateThetaDeviation": 0.26179939,
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseTopic": "/move_base_simple/goal",
+        "type": "point"
+      },
+      "scene": {},
+      "topics": {},
+      "transforms": {}
+    },
+    "Image!4lbu25r": {
+      "cameraState": {
+        "distance": 20,
+        "far": 5000,
+        "fovy": 45,
+        "near": 0.5,
+        "perspective": true,
+        "phi": 60,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 45
+      },
+      "followMode": "follow-pose",
+      "imageMode": {
+        "imageTopic": "/owl_right/left/image_resized"
+      },
+      "layers": {},
+      "publish": {
+        "pointTopic": "/clicked_point",
+        "poseEstimateThetaDeviation": 0.26179939,
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseTopic": "/move_base_simple/goal",
+        "type": "point"
+      },
+      "scene": {},
+      "topics": {},
+      "transforms": {}
+    },
+    "Image!9k5u5": {
+      "cameraState": {
+        "distance": 20,
+        "far": 5000,
+        "fovy": 45,
+        "near": 0.5,
+        "perspective": true,
+        "phi": 60,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 45
+      },
+      "followMode": "follow-pose",
+      "imageMode": {
+        "imageTopic": "/owl_back/left/image_resized"
+      },
+      "layers": {},
+      "publish": {
+        "pointTopic": "/clicked_point",
+        "poseEstimateThetaDeviation": 0.26179939,
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseTopic": "/move_base_simple/goal",
+        "type": "point"
+      },
+      "scene": {},
+      "topics": {},
+      "transforms": {}
+    },
+    "Image!hcyx98": {
+      "cameraState": {
+        "distance": 20,
+        "far": 5000,
+        "fovy": 45,
+        "near": 0.5,
+        "perspective": true,
+        "phi": 60,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 45
+      },
+      "followMode": "follow-pose",
+      "imageMode": {
+        "imageTopic": "/owl_front/left/image_resized"
+      },
+      "layers": {},
+      "publish": {
+        "pointTopic": "/clicked_point",
+        "poseEstimateThetaDeviation": 0.26179939,
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseTopic": "/move_base_simple/goal",
+        "type": "point"
+      },
+      "scene": {},
+      "topics": {},
+      "transforms": {}
+    }
+  },
+  "globalVariables": {},
+  "layout": {
+    "direction": "row",
+    "first": {
+      "direction": "row",
+      "first": "Image!2757qnp",
+      "second": {
+        "direction": "column",
+        "first": "Image!hcyx98",
+        "second": "Image!9k5u5",
+        "splitPercentage": 49.867139061116035
+      },
+      "splitPercentage": 32.804614275414565
+    },
+    "second": "Image!4lbu25r",
+    "splitPercentage": 75.13542795232937
+  },
+  "playbackConfig": {
+    "speed": 1
+  },
+  "userNodes": {}
+}
