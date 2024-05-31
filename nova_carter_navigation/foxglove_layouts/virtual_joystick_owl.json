@@ -1,0 +1,137 @@
+{
+  "configById": {
+    "Image!hcyx98": {
+      "cameraState": {
+        "distance": 20,
+        "far": 5000,
+        "fovy": 45,
+        "near": 0.5,
+        "perspective": true,
+        "phi": 60,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 45
+      },
+      "followMode": "follow-pose",
+      "imageMode": {
+        "imageTopic": "/owl_front/left/image_resized"
+      },
+      "layers": {},
+      "publish": {
+        "pointTopic": "/clicked_point",
+        "poseEstimateThetaDeviation": 0.26179939,
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseTopic": "/move_base_simple/goal",
+        "type": "point"
+      },
+      "scene": {},
+      "topics": {
+        "/amcl_pose": {
+          "visible": false
+        },
+        "/back_2d_lidar/scan": {
+          "visible": false
+        },
+        "/front_2d_lidar/scan": {
+          "visible": false
+        },
+        "/global_costmap/costmap": {
+          "visible": false
+        },
+        "/global_costmap/published_footprint": {
+          "visible": false
+        },
+        "/goal_pose": {
+          "visible": false
+        },
+        "/initialpose": {
+          "visible": false
+        },
+        "/local_costmap/costmap": {
+          "visible": false
+        },
+        "/local_costmap/published_footprint": {
+          "visible": false
+        },
+        "/local_costmap/voxel_grid": {
+          "visible": false
+        },
+        "/map": {
+          "visible": false
+        },
+        "/move_base_simple/goal": {
+          "visible": false
+        },
+        "/plan": {
+          "visible": false
+        },
+        "/plan_smoothed": {
+          "visible": false
+        },
+        "/pointcloud": {
+          "visible": false
+        },
+        "/scan": {
+          "visible": false
+        },
+        "/trajectories": {
+          "visible": false
+        },
+        "/transformed_global_plan": {
+          "visible": false
+        },
+        "/unsmoothed_plan": {
+          "visible": false
+        }
+      },
+      "transforms": {}
+    },
+    "Teleop!2422nyg": {
+      "downButton": {
+        "field": "linear-x",
+        "value": -0.5
+      },
+      "leftButton": {
+        "field": "angular-z",
+        "value": 0.5
+      },
+      "publishRate": 1,
+      "rightButton": {
+        "field": "angular-z",
+        "value": -0.5
+      },
+      "topic": "/virtual_joy/cmd_vel",
+      "upButton": {
+        "field": "linear-x",
+        "value": 0.5
+      }
+    }
+  },
+  "globalVariables": {},
+  "layout": {
+    "direction": "row",
+    "first": "Image!hcyx98",
+    "second": "Teleop!2422nyg",
+    "splitPercentage": 79.62239583333334
+  },
+  "playbackConfig": {
+    "speed": 1
+  },
+  "userNodes": {}
+}

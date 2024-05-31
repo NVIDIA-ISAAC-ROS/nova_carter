@@ -1,0 +1,360 @@
+{
+  "configById": {
+    "3D!18i6zy7": {
+      "layers": {
+        "845139cb-26bc-40b3-8161-8ab60af4baf5": {
+          "visible": true,
+          "frameLocked": true,
+          "label": "Grid",
+          "instanceId": "845139cb-26bc-40b3-8161-8ab60af4baf5",
+          "layerId": "foxglove.Grid",
+          "size": 10,
+          "divisions": 10,
+          "lineWidth": 1,
+          "color": "#248eff",
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "order": 1
+        }
+      },
+      "cameraState": {
+        "perspective": true,
+        "distance": 5.839780486717745,
+        "phi": 65.03947288719445,
+        "thetaOffset": -88.80977550627881,
+        "targetOffset": [
+          -1.177863219676031,
+          -0.09139378357041673,
+          -5.522926969546992e-16
+        ],
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "fovy": 45,
+        "near": 0.5,
+        "far": 5000
+      },
+      "followMode": "follow-pose",
+      "followTf": "odom",
+      "scene": {
+        "meshUpAxis": "z_up",
+        "transforms": {
+          "labelSize": 0.1
+        }
+      },
+      "transforms": {
+        "frame:back_2d_lidar": {
+          "visible": false
+        },
+        "frame:base_link": {
+          "visible": true
+        },
+        "frame:back_2d_lidar_mount": {
+          "visible": false
+        },
+        "frame:back_fisheye_camera": {
+          "visible": false
+        },
+        "frame:back_fisheye_camera_mount": {
+          "visible": false
+        },
+        "frame:back_fisheye_camera_optical": {
+          "visible": false
+        },
+        "frame:back_stereo_camera_imu": {
+          "visible": false
+        },
+        "frame:back_stereo_camera": {
+          "visible": false
+        },
+        "frame:back_stereo_camera_left": {
+          "visible": false
+        },
+        "frame:back_stereo_camera_left_optical": {
+          "visible": false
+        },
+        "frame:back_stereo_camera_mount": {
+          "visible": false
+        },
+        "frame:back_stereo_camera_right": {
+          "visible": false
+        },
+        "frame:back_stereo_camera_right_optical": {
+          "visible": false
+        },
+        "frame:chassis_imu": {
+          "visible": false
+        },
+        "frame:front_2d_lidar": {
+          "visible": false
+        },
+        "frame:front_2d_lidar_mount": {
+          "visible": false
+        },
+        "frame:front_3d_lidar": {
+          "visible": false
+        },
+        "frame:front_3d_lidar_mount": {
+          "visible": false
+        },
+        "frame:front_fisheye_camera": {
+          "visible": false
+        },
+        "frame:front_fisheye_camera_mount": {
+          "visible": false
+        },
+        "frame:front_fisheye_camera_optical": {
+          "visible": false
+        },
+        "frame:front_stereo_camera_imu": {
+          "visible": false
+        },
+        "frame:front_stereo_camera": {
+          "visible": false
+        },
+        "frame:front_stereo_camera_left": {
+          "visible": false
+        },
+        "frame:front_stereo_camera_left_optical": {
+          "visible": false
+        },
+        "frame:front_stereo_camera_mount": {
+          "visible": false
+        },
+        "frame:front_stereo_camera_right": {
+          "visible": false
+        },
+        "frame:front_stereo_camera_right_optical": {
+          "visible": false
+        },
+        "frame:left_fisheye_camera": {
+          "visible": false
+        },
+        "frame:left_fisheye_camera_mount": {
+          "visible": false
+        },
+        "frame:left_fisheye_camera_optical": {
+          "visible": false
+        },
+        "frame:left_stereo_camera_imu": {
+          "visible": false
+        },
+        "frame:left_stereo_camera": {
+          "visible": false
+        },
+        "frame:left_stereo_camera_left": {
+          "visible": false
+        },
+        "frame:left_stereo_camera_left_optical": {
+          "visible": false
+        },
+        "frame:left_stereo_camera_mount": {
+          "visible": false
+        },
+        "frame:left_stereo_camera_right": {
+          "visible": false
+        },
+        "frame:left_stereo_camera_right_optical": {
+          "visible": false
+        },
+        "frame:nova_carter": {
+          "visible": false
+        },
+        "frame:right_fisheye_camera": {
+          "visible": false
+        },
+        "frame:right_fisheye_camera_mount": {
+          "visible": false
+        },
+        "frame:right_fisheye_camera_optical": {
+          "visible": false
+        },
+        "frame:right_stereo_camera_imu": {
+          "visible": false
+        },
+        "frame:right_stereo_camera": {
+          "visible": false
+        },
+        "frame:right_stereo_camera_left": {
+          "visible": false
+        },
+        "frame:right_stereo_camera_left_optical": {
+          "visible": false
+        },
+        "frame:right_stereo_camera_mount": {
+          "visible": false
+        },
+        "frame:right_stereo_camera_right": {
+          "visible": false
+        },
+        "frame:right_stereo_camera_right_optical": {
+          "visible": false
+        },
+        "frame:nova_carter_caster_frame_base": {
+          "visible": false
+        },
+        "frame:caster_wheel_left": {
+          "visible": false
+        },
+        "frame:caster_swivel_left": {
+          "visible": false
+        },
+        "frame:caster_wheel_right": {
+          "visible": false
+        },
+        "frame:caster_swivel_right": {
+          "visible": false
+        },
+        "frame:wheel_left": {
+          "visible": false
+        },
+        "frame:wheel_right": {
+          "visible": false
+        },
+        "frame:nova_developer_kit_mount": {
+          "visible": false
+        },
+        "frame:nova_developer_kit_link": {
+          "visible": false
+        }
+      },
+      "topics": {
+        "/robot_description": {
+          "visible": true
+        },
+        "/pointcloud": {
+          "visible": false,
+          "colorField": "z",
+          "colorMode": "colormap",
+          "colorMap": "turbo"
+        },
+        "/front_stereo_camera/left/image_raw": {
+          "visible": true,
+          "frameLocked": true,
+          "cameraInfoTopic": "/front_stereo_camera/left/camera_info",
+          "distance": 1,
+          "planarProjectionFactor": 0,
+          "color": "#ffffff"
+        },
+        "/front_fisheye_camera/left/image_raw": {
+          "visible": false,
+          "frameLocked": true,
+          "cameraInfoTopic": "/front_fisheye_camera/left/camera_info",
+          "distance": 1,
+          "planarProjectionFactor": 0,
+          "color": "#ffffff"
+        },
+        "/front_2d_lidar/scan": {
+          "visible": true,
+          "colorField": "intensity",
+          "colorMode": "colormap",
+          "colorMap": "turbo"
+        },
+        "/back_2d_lidar/scan": {
+          "visible": true,
+          "colorField": "intensity",
+          "colorMode": "colormap",
+          "colorMap": "turbo"
+        },
+        "/nvblox_node/static_esdf_pointcloud": {
+          "visible": true,
+          "colorField": "intensity",
+          "colorMode": "colormap",
+          "colorMap": "turbo"
+        },
+        "/nvblox_node/tsdf_layer": {
+          "visible": false
+        },
+        "/left_stereo_camera/left/image_raw": {
+          "visible": false,
+          "frameLocked": true,
+          "cameraInfoTopic": "/left_stereo_camera/left/camera_info",
+          "distance": 1,
+          "planarProjectionFactor": 0,
+          "color": "#ffffff"
+        },
+        "/right_stereo_camera/left/image_raw": {
+          "visible": false,
+          "frameLocked": true,
+          "cameraInfoTopic": "/right_stereo_camera/left/camera_info",
+          "distance": 1,
+          "planarProjectionFactor": 0,
+          "color": "#ffffff"
+        },
+        "/map": {
+          "visible": false
+        },
+        "/local_costmap/costmap": {
+          "visible": true,
+          "colorMode": "costmap"
+        },
+        "/amcl_pose": {
+          "visible": false
+        },
+        "/front_3d_lidar/scan": {
+          "visible": false,
+          "colorField": "intensity",
+          "colorMode": "colormap",
+          "colorMap": "turbo"
+        },
+        "/plan": {
+          "visible": true
+        },
+        "/global_costmap/costmap": {
+          "visible": true,
+          "colorMode": "costmap"
+        },
+        "/initialpose": {
+          "visible": true
+        },
+        "/front_3d_lidar/pointcloud": {
+          "visible": false,
+          "colorField": "z",
+          "colorMode": "colormap",
+          "colorMap": "turbo"
+        },
+        "/visual_slam/tracking/vo_path": {
+          "visible": true
+        },
+        "/left_stereo_camera/left/camera_info": {
+          "visible": false
+        },
+        "/front_stereo_camera/left/camera_info": {
+          "visible": false
+        }
+      },
+      "publish": {
+        "type": "pose",
+        "poseTopic": "/goal_pose",
+        "pointTopic": "/clicked_point",
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseEstimateThetaDeviation": 0.26179939
+      },
+      "imageMode": {}
+    }
+  },
+  "globalVariables": {},
+  "userNodes": {},
+  "playbackConfig": {
+    "speed": 1
+  },
+  "layout": "3D!18i6zy7"
+}

@@ -1,0 +1,138 @@
+{
+  "configById": {
+    "3D!2c47gls": {
+      "cameraState": {
+        "distance": 25.847108697816047,
+        "far": 5000,
+        "fovy": 45,
+        "near": 0.5,
+        "perspective": false,
+        "phi": 14.413160112710901,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          5.2024787720381624,
+          -2.158157954636036,
+          3.5744599246879275e-15
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 1.1055519445299318
+      },
+      "followMode": "follow-pose",
+      "followTf": "map",
+      "imageMode": {},
+      "layers": {
+        "5b3c4b35-2c0d-4374-b7a1-cfdb39f51e43": {
+          "color": "#248eff",
+          "divisions": 10,
+          "frameLocked": true,
+          "instanceId": "5b3c4b35-2c0d-4374-b7a1-cfdb39f51e43",
+          "label": "Grid",
+          "layerId": "foxglove.Grid",
+          "lineWidth": 1,
+          "order": 1,
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "size": 10,
+          "visible": true
+        }
+      },
+      "publish": {
+        "pointTopic": "/clicked_point",
+        "poseEstimateThetaDeviation": 0.26179939,
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseTopic": "/goal_pose",
+        "type": "pose"
+      },
+      "scene": {
+        "transforms": {
+          "axisScale": 2.5,
+          "enablePreloading": true,
+          "showLabel": true
+        }
+      },
+      "topics": {
+        "/back_2d_lidar/scan": {
+          "colorField": "intensity",
+          "colorMap": "turbo",
+          "colorMode": "colormap",
+          "pointSize": 3,
+          "visible": false
+        },
+        "/global_costmap/costmap": {
+          "alpha": 0.3,
+          "colorMode": "costmap",
+          "visible": true
+        },
+        "/global_costmap/published_footprint": {
+          "visible": false
+        },
+        "/local_costmap/costmap": {
+          "alpha": 0.8,
+          "colorMode": "costmap",
+          "visible": true
+        },
+        "/local_costmap/published_footprint": {
+          "visible": true
+        },
+        "/map": {
+          "colorMode": "custom",
+          "visible": true
+        },
+        "/plan": {
+          "lineWidth": 0.1,
+          "type": "line",
+          "visible": true
+        },
+        "/pointcloud": {
+          "colorField": "x",
+          "colorMap": "turbo",
+          "colorMode": "colormap",
+          "pointSize": 4,
+          "visible": false
+        },
+        "/scan": {
+          "colorField": "intensity",
+          "colorMap": "turbo",
+          "colorMode": "colormap",
+          "visible": false
+        },
+        "/trajectories": {
+          "visible": false
+        }
+      },
+      "transforms": {
+        "frame:back_laser": {
+          "visible": false
+        },
+        "frame:front_laser": {
+          "visible": false
+        }
+      }
+    }
+  },
+  "globalVariables": {},
+  "layout": "3D!2c47gls",
+  "playbackConfig": {
+    "speed": 1
+  },
+  "userNodes": {}
+}

@@ -1,2 +1,8 @@
 # Ignore all pycache files
 **/__pycache__/**
+
+# Ignore ESS model folder
+**/models/**
+
+**/comm_ctrl_navigation.h
+**/libctrl_arm64-v8a.so
