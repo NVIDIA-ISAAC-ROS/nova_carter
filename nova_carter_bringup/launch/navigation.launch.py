@@ -56,14 +56,21 @@ def generate_launch_description() -> LaunchDescription:
 
     # NOTE: If running in sim mode we do mapping in another frame to not clash with ground truth
     # coming out of Isaac Sim.
+    # NOTE: If running in sim mode we are setting the reliability policy of vslam to reliable
+    # as we were experiencing issues with the best effort policy
+    # (i.e. not able to synchronize input messages due to dropped images).
     global_frame = lu.if_else_substitution(is_sim, 'odom_vslam', 'odom')
+    vslam_image_qos = lu.if_else_substitution(is_sim, 'DEFAULT', 'SENSOR_DATA')
 
     # Add the navigation.
     actions.append(
         lu.include(
             'nova_carter_bringup',
             'launch/include/navigation_include.launch.py',
-            launch_arguments={'global_frame': global_frame},
+            launch_arguments={
+                'global_frame': global_frame,
+                'vslam_image_qos': vslam_image_qos,
+            },
         ))
 
     actions.append(
