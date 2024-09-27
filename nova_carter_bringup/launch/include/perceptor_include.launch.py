@@ -90,6 +90,7 @@ def generate_launch_description() -> LaunchDescription:
     # String specifying the stereo camera configuration.
     args.add_arg('stereo_camera_configuration')
     args.add_arg('global_frame')
+    args.add_arg('vslam_image_qos')
     args.add_arg('disable_cuvslam', False)
     args.add_arg('disable_nvblox', False)
     actions = args.get_launch_actions()
@@ -131,6 +132,7 @@ def generate_launch_description() -> LaunchDescription:
             launch_arguments={
                 'perceptor_configuration': perceptor_configuration,
                 'global_frame': args.global_frame,
+                'vslam_image_qos': args.vslam_image_qos,
             },
         ))
 

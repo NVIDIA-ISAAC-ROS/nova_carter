@@ -155,6 +155,7 @@ def generate_launch_description() -> LaunchDescription:
     args.add_arg('stereo_camera_configuration', None)
     args.add_arg('mode')
     args.add_arg('global_frame', 'odom')
+    args.add_arg('vslam_image_qos', 'SENSOR_DATA')
     args.add_arg('map_yaml_path')
     args.add_arg('enable_navigation')
     args.add_arg('enable_mission_client')
@@ -202,6 +203,7 @@ def generate_launch_description() -> LaunchDescription:
                 'enable_3d_lidar': enable_3d_lidar,
                 'enabled_2d_lidars': enabled_2d_lidars,
                 'global_frame': args.global_frame,
+                'vslam_image_qos': args.vslam_image_qos,
                 'invert_odom_to_base_tf': is_sim,
                 'disable_cuvslam': disable_cuvslam,
             },

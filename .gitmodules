@@ -1,4 +1,0 @@
-[submodule "segway_rmp/RMP220-SDK"]
-	path = segway_rmp/RMP220-SDK
-	url = https://github.com/SegwayRoboticsSamples/RMP220-SDK
-	branch = release
