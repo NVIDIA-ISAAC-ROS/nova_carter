@@ -288,8 +288,8 @@ local_costmap:
       global_frame: odom
       robot_base_frame: base_link
       rolling_window: true
-      width: 3
-      height: 3
+      width: 6
+      height: 6
       resolution: 0.05
       transform_tolerance: 0.3
       footprint: "[ [0.14, 0.25], [0.14, -0.25], [-0.607, -0.25], [-0.607, 0.25] ]"
@@ -325,7 +325,7 @@ local_costmap:
         plugin: "nvblox::nav2::NvbloxCostmapLayer"
         enabled: True
         nav2_costmap_global_frame: odom # must match with global_frame of local_costmap
-        nvblox_map_slice_topic: "/nvblox_node/static_map_slice"
+        nvblox_map_slice_topic: "/nvblox_node/pessimistic_static_map_slice"
         convert_to_binary_costmap: True
       3d_lidar_layer:
         plugin: "spatio_temporal_voxel_layer/SpatioTemporalVoxelLayer"
@@ -343,7 +343,7 @@ local_costmap:
         observation_sources: hesai_mark hesai_clear
         hesai_mark:
           data_type: PointCloud2
-          topic: /front_3d_lidar/pointcloud
+          topic: /front_3d_lidar/lidar_points
           marking: true
           clearing: false
           obstacle_range: 3.0 # meters
@@ -357,7 +357,7 @@ local_costmap:
         hesai_clear:
           enabled: true #default true, can be toggled on/off with associated service call
           data_type: PointCloud2
-          topic: /front_3d_lidar/pointcloud
+          topic: /front_3d_lidar/lidar_points
           marking: false
           clearing: true
           max_z: 20.0 # default 0, meters
@@ -375,7 +375,6 @@ global_costmap:
       publish_frequency: 1.0
       global_frame: map
       robot_base_frame: base_link
-      use_sim_time: False
       footprint: "[ [0.14, 0.25], [0.14, -0.25], [-0.607, -0.25], [-0.607, 0.25] ]"
       resolution: 0.05
       # The following is only used as a default when no map is specified.
@@ -385,7 +384,7 @@ global_costmap:
       origin_y: -25.0
       track_unknown_space: False
       mark_threshold: 2
-      always_send_full_costmap: False
+      always_send_full_costmap: True
       plugins: [TO_BE_OVERRIDDEN]
       static_map_layer:
         plugin: "nav2_costmap_2d::StaticLayer"

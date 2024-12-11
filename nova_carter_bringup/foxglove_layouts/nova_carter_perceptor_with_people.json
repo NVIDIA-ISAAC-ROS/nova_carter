@@ -243,23 +243,23 @@
           "colorMap": "rainbow",
           "pointSize": 7
         },
-        "/nvblox_human_node/mesh": {
+        "/nvblox_node/mesh": {
           "visible": true
         },
-        "/nvblox_human_node/static_esdf_pointcloud": {
+        "/nvblox_node/static_esdf_pointcloud": {
           "visible": true,
           "colorField": "intensity",
           "colorMode": "colormap",
           "colorMap": "rainbow",
           "pointSize": 8
         },
-        "/nvblox_human_node/human_voxels": {
+        "/nvblox_node/human_voxels": {
           "visible": false
         },
-        "/nvblox_human_node/dynamic_occupancy_layer": {
+        "/nvblox_node/dynamic_occupancy_layer": {
           "visible": true
         },
-        "/nvblox_human_node/combined_esdf_pointcloud": {
+        "/nvblox_node/combined_esdf_pointcloud": {
           "visible": false,
           "colorField": "intensity",
           "colorMode": "colormap",

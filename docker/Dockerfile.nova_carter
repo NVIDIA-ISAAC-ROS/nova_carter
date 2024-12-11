@@ -7,7 +7,7 @@
 # license agreement from NVIDIA CORPORATION is strictly prohibited.
 #####################################################################################
 
-ARG BASE_IMAGE
+ARG BASE_IMAGE="ubuntu:22.04"
 FROM ${BASE_IMAGE} as base_image
 
 # Install prerequisites for nova_carter
@@ -22,9 +22,9 @@ RUN apt-get update && apt-get install -y \
 && apt-get clean
 
 # Install spatio_temporal_voxel_layer dependencies
-RUN apt-get update && apt-get install -y \    
-    ros-humble-twist-mux \ 
-    ros-humble-joy-linux \ 
+RUN apt-get update && apt-get install -y \
+    ros-humble-twist-mux \
+    ros-humble-joy-linux \
     ros-humble-teleop-twist-joy \
     ros-humble-nav2* \
     ros-humble-nav2-bringup \
@@ -38,7 +38,7 @@ FROM base_image as use_cyclone_dds_arm64
 # Install and setup cyclone DDS
 RUN apt-get update && apt-get install -y ros-humble-rmw-cyclonedds-cpp
 ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
-ENV CYCLONEDDS_URI='<CycloneDDS><Domain><General><Interfaces><NetworkInterface name="eth0" /></Interfaces></General></Domain></CycloneDDS>'
+ENV CYCLONEDDS_URI='<CycloneDDS><Domain><General><Interfaces><NetworkInterface name="eno1" /></Interfaces></General></Domain></CycloneDDS>'
 
 ## Else:
 FROM base_image as use_cyclone_dds_amd64

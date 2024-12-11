@@ -41,7 +41,7 @@ def generate_launch_description():
             description='Camera info topic'),
         DeclareLaunchArgument(
             'stereo_camera_configuration',
-            default_value='front_configuration',
+            default_value='front_driver_rectify',
             description='Other choices: front_left_right_configuration, front_driver_rectify'),
         DeclareLaunchArgument(
             'map_yaml_path',

@@ -26,7 +26,7 @@ def generate_launch_description():
         plugin='nvidia::isaac_ros::segway_rmp::SegwayRMPNode',
         name='segway_rmp',
         parameters=[{
-                'enable_statistics': True,
+                'enable_diagnostics': True,
                 'topics_list': ['odom'],
                 'expected_fps_list': [40.0],
                 'jitter_tolerance_us': 200000

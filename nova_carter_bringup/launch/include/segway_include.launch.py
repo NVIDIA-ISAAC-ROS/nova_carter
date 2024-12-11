@@ -22,6 +22,7 @@ from isaac_ros_launch_utils.all_types import *
 def generate_launch_description() -> LaunchDescription:
     args = lu.ArgumentContainer()
     args.add_arg('enable_wheel_odometry')
+    args.add_arg('namespace')
 
     actions = args.get_launch_actions()
     actions.append(lu.log_info(['Enabling wheel odometry: ', args.enable_wheel_odometry]))
@@ -30,13 +31,13 @@ def generate_launch_description() -> LaunchDescription:
         package='isaac_ros_segway_rmp',
         plugin='nvidia::isaac_ros::segway_rmp::SegwayRMPNode',
         name='segway_rmp',
-        namespace='chassis',
+        namespace=args.namespace,
         remappings=[
             ('cmd_vel', '/twist_mux/cmd_vel'),
         ],
         parameters=[{
             'enable_odometry_tf': args.enable_wheel_odometry,
-            'enable_statistics': True,
+            'enable_diagnostics': True,
             'topics_list': ['odom'],
             'expected_fps_list': [40.0],
             'jitter_tolerance_us': 50000

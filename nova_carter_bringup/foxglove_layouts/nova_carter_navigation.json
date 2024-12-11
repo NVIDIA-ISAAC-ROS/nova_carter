@@ -30,7 +30,8 @@
       "followTf": "map",
       "scene": {
         "labelScaleFactor": 0.99,
-        "backgroundColor": "#3c3c3c"
+        "backgroundColor": "#3c3c3c",
+        "meshUpAxis": "z_up"
       },
       "transforms": {
         "frame:back_2d_lidar": {
