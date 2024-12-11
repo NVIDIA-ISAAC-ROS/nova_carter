@@ -2,13 +2,14 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>nova_carter_docking</name>
-  <version>3.1.0</version>
+  <version>3.2.0</version>
   <description>A docking solution and plugin for the Nova Carter robot</description>
   <maintainer email="isaac-ros-maintainers@nvidia.com">Isaac ROS Maintainers</maintainer>
   <license>Apache-2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
   <buildtool_depend>ament_cmake_python</buildtool_depend>
+  <build_depend>isaac_ros_common</build_depend>
 
   <depend>angles</depend>
   <depend>rclcpp</depend>

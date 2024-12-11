@@ -25,6 +25,7 @@ def generate_launch_description() -> LaunchDescription:
     args.add_arg('enable_mission_client')
     args.add_arg('navigation_parameters_path')
     args.add_arg('navigation_container_name', 'navigation_container')
+    args.add_arg('use_sim_time', False)
 
     actions = args.get_launch_actions()
     actions.append(
@@ -40,6 +41,7 @@ def generate_launch_description() -> LaunchDescription:
                 'container_name': args.navigation_container_name,
                 # NOTE: nav2 wants this parameter as a capitalized string.
                 'use_composition': 'True',
+                'use_sim_time': args.use_sim_time,
             },
         ))
 

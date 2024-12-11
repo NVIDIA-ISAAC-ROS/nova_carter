@@ -19,6 +19,7 @@
 import isaac_ros_launch_utils as lu
 from isaac_ros_launch_utils.all_types import *
 from nav2_common.launch import RewrittenYaml
+from launch_ros.actions import SetRemap
 
 
 def set_override_parameters(args: lu.ArgumentContainer) -> list[Action]:
@@ -30,32 +31,36 @@ def set_override_parameters(args: lu.ArgumentContainer) -> list[Action]:
     #   - A mixture of nvblox, 2D, and 3D LiDAR
     # - Isaac Sim Carter
     #   - nvblox
+    enable_global_navigation = lu.is_valid(args.map_yaml_path)
+
+    if enable_global_navigation:
+        print('Enabling global navigation.')
+        global_costmap_plugins.append('static_map_layer')
+
     if args.mode == 'simulation':
-        print('In simulation only nvblox costmap supported.')
         print('Enabling nvblox costmap.')
         local_costmap_plugins.append('nvblox_layer')
         global_costmap_plugins.append('nvblox_layer')
         odometry_topic = '/visual_slam/tracking/odometry'
     else:
-        enable_global_navigation = lu.is_valid(args.map_yaml_path)
-        if enable_global_navigation:
-            print('Enabling global navigation.')
-            global_costmap_plugins.append('static_map_layer')
-
         if args.enable_2d_lidar_costmap:
             for name in ['front_2d_lidar', 'back_2d_lidar']:
                 print(f'Enabling 2d lidar costmap for {name}.')
                 local_costmap_plugins.append(f'{name}_layer')
+                global_costmap_plugins.append(f'{name}_layer')
 
         if args.enable_3d_lidar_costmap:
             print('Enabling 3d lidar costmap.')
             local_costmap_plugins.append('3d_lidar_layer')
+            global_costmap_plugins.append('3d_lidar_layer')
 
         if args.enable_nvblox_costmap:
             print('Enabling nvblox costmap.')
             local_costmap_plugins.append('nvblox_layer')
+            global_costmap_plugins.append('nvblox_layer')
 
-        if args.enable_wheel_odometry:
+        # Disable wheel odome when visual localization is enabled.
+        if args.enable_wheel_odometry and not args.enable_visual_localization:
             odometry_topic = '/chassis/odom'
         else:
             odometry_topic = '/visual_slam/tracking/odometry'
@@ -98,16 +103,18 @@ def set_override_parameters(args: lu.ArgumentContainer) -> list[Action]:
             value=odometry_topic,
         ))
 
-    if args.enable_3d_lidar_localization:
-        scan_topic = '/front_3d_lidar/scan'
-    else:
-        scan_topic = '/front_2d_lidar/scan'
+    # configure lidar localization when visual localization is not enabled
+    if not args.enable_visual_localization:
+        if args.enable_3d_lidar_localization:
+            scan_topic = '/front_3d_lidar/scan'
+        else:
+            scan_topic = '/front_2d_lidar/scan'
 
-    actions.append(lu.set_parameter(
-        namespace='/amcl',
-        parameter='scan_topic',
-        value=scan_topic,
-    ))
+        actions.append(lu.set_parameter(
+            namespace='/amcl',
+            parameter='scan_topic',
+            value=scan_topic,
+        ))
 
     return actions
 
@@ -127,22 +134,19 @@ def check_args(args: lu.ArgumentContainer):
     # Some of are arguments are not supported when running in Isaac Sim.
     # This function checks the passed arguments.
     if args.mode == 'simulation':
-        if args.map_yaml_path != None:
-            print(
-                f"Map passed to navigation in Isaac Sim: {args.map_yaml_path}. This feature is not "
-                "supported yet. Map ignored, performing local navigation.")
         if (args.enable_2d_lidar_costmap == True):
             print("Navigation with 2D LiDAR not supported yet in sim. 2D LiDARs will not be used.")
         if (args.enable_3d_lidar_costmap == True):
             print("Navigation with 3D LiDAR not supported yet in sim. 3D LiDARs will not be used.")
         assert (
-            not args.global_frame == 'odom'
-        ), "Tried to use odom as the global frame. This will cause collisions between the Isaac Sim "
-        "supplied GT pose and cuVSLAM. Please use another global frame name."
-        assert (args.stereo_camera_configuration == None
-                or args.stereo_camera_configuration == 'front_configuration'
-                ), "Only stereo_camera_configuration:=front_configuration supported in Isaac Sim."
-
+            args.map_yaml_path or not args.global_frame == 'odom'
+        ), "Tried to use odom as the global frame but no map yaml path was provided. This will "
+        "cause collisions between the Isaac Sim supplied GT pose and cuVSLAM. Please use another "
+        "global frame name."
+        valid_sim_configs = ['front_configuration', 'front_left_right_configuration']
+        assert (args.stereo_camera_configuration in valid_sim_configs
+                ), f"stereo_camera_configuration:={args.stereo_camera_configuration} " \
+            f"not supported in Isaac Sim. Valid configurations are {valid_sim_configs}."
     # Wheel odometry or stereo cameras have to be enabled.
     # Otherwise the robot will not have any odometry source
     assert (args.enable_wheel_odometry == True or args.stereo_camera_configuration
@@ -152,7 +156,7 @@ def check_args(args: lu.ArgumentContainer):
 def generate_launch_description() -> LaunchDescription:
     args = lu.ArgumentContainer()
     args.add_arg('navigation_parameters_path')
-    args.add_arg('stereo_camera_configuration', None)
+    args.add_arg('stereo_camera_configuration')
     args.add_arg('mode')
     args.add_arg('global_frame', 'odom')
     args.add_arg('vslam_image_qos', 'SENSOR_DATA')
@@ -164,29 +168,75 @@ def generate_launch_description() -> LaunchDescription:
     args.add_arg('enable_nvblox_costmap')
     args.add_arg('enable_wheel_odometry')
     args.add_arg('enable_3d_lidar_localization')
+    args.add_arg('enable_visual_localization')
 
     args.add_opaque_function(check_args)
 
     is_sim = lu.is_equal(args.mode, 'simulation')
 
-    enable_global_navigation = AndSubstitution(lu.is_valid(args.map_yaml_path), lu.is_not(is_sim))
+    enable_global_navigation = lu.is_valid(args.map_yaml_path)
+
+    # We disable lidar localization if a user requests visual localization
+    enable_lidar_localization = lu.AndSubstitution(
+        enable_global_navigation, lu.NotSubstitution(args.enable_visual_localization))
+
+    # We disable wheel_odometry if a user requests visual localization
+    enable_wheel_odometry = lu.AndSubstitution(args.enable_wheel_odometry,
+                                               lu.NotSubstitution(args.enable_visual_localization))
+
+    # Enable 3d lidar localization if lidar localization is enabled and user requests 3d ldiar
+    enable_3d_lidar_localization = lu.AndSubstitution(
+        enable_lidar_localization, args.enable_3d_lidar_localization)
+
+    # Enable 2d lidar localization if lidar localization is enabled and users requests 2d lidar
+    enable_2d_lidar_localization = lu.AndSubstitution(
+        enable_lidar_localization, lu.NotSubstitution(args.enable_3d_lidar_localization))
+
     enable_3d_lidar = OrSubstitution(args.enable_3d_lidar_costmap,
-                                     args.enable_3d_lidar_localization)
+                                     enable_3d_lidar_localization)
     enable_2d_lidars = OrSubstitution(args.enable_2d_lidar_costmap,
-                                      NotSubstitution(args.enable_3d_lidar_localization))
+                                      enable_2d_lidar_localization)
     enabled_2d_lidars = lu.if_else_substitution(enable_2d_lidars, 'front_2d_lidar,back_2d_lidar',
                                                 '')
-    disable_cuvslam = AndSubstitution(args.enable_wheel_odometry, lu.is_not(is_sim))
+    # Only disable cuvslam when:
+    # - doing global navigation in Isaac Sim
+    # - running wheel odom on real robot
+    # TODO: enable cuvslam for global navigation in Sim when global localization
+    # is supported.
+    disable_cuvslam = OrSubstitution(
+        AndSubstitution(enable_wheel_odometry, lu.is_false(is_sim)),
+        AndSubstitution(enable_global_navigation, lu.is_true(is_sim))
+    )
 
     actions = args.get_launch_actions()
 
     # When running in Isaac Sim we rewrite the parameter file to adjust the frame names.
     actions.append(lu.assert_path_exists(args.navigation_parameters_path))
+    # Rewrite nav parameters when:
+    # - running local navigation in Isaac Sim (i.e. no global map passed)
+    run_local_navigation_in_sim = AndSubstitution(
+        lu.is_false(enable_global_navigation), lu.is_true(is_sim))
     navigation_parameters_path = lu.if_else_substitution(
-        is_sim,
+        run_local_navigation_in_sim,
         rewrite_navigation_parameters_for_sim(args.navigation_parameters_path, args.global_frame),
         args.navigation_parameters_path)
 
+    # Launch a map server only when map is provided and lidar_localization.launch.py is not included
+    launch_map_server = AndSubstitution(lu.NotSubstitution(
+        enable_lidar_localization), lu.is_valid(args.map_yaml_path))
+
+    # The yaml_filename in navigation_parameters_path somehow overrides the one in occupancy_map_server.launch.py.
+    # We change the parameter in navigation_parameters_path to the input map file.
+    navigation_parameters_path = lu.if_else_substitution(
+        launch_map_server,
+        RewrittenYaml(source_file=navigation_parameters_path,
+                      root_key='',
+                      param_rewrites={'yaml_filename': args.map_yaml_path},
+                      convert_types=True),
+        navigation_parameters_path
+    )
+
+    actions.append(lu.log_info(['Load navigation parameters from: ', navigation_parameters_path]))
     actions.append(SetParametersFromFile(navigation_parameters_path))
     # We have to add the opaque function after having set the default
     # parameters. This will also add the opaque function to the actions in
@@ -203,9 +253,19 @@ def generate_launch_description() -> LaunchDescription:
                 'enable_3d_lidar': enable_3d_lidar,
                 'enabled_2d_lidars': enabled_2d_lidars,
                 'global_frame': args.global_frame,
+                'vslam_odom_frame': args.global_frame,
+                # When publish_map_to_odom_tf is true, the AMCL localization pose somehow becomes ineffective.
+                # Do not publish map tf in vslam when lidar localization is enabled.
+                'vslam_publish_map_to_odom_tf': lu.is_false(enable_lidar_localization),
+                'nvblox_global_frame': args.global_frame,
                 'vslam_image_qos': args.vslam_image_qos,
                 'invert_odom_to_base_tf': is_sim,
                 'disable_cuvslam': disable_cuvslam,
+                'disable_nvblox': lu.is_false(args.enable_nvblox_costmap),
+                'is_sim': is_sim,
+                'disable_vgl': lu.is_false(args.enable_visual_localization),
+                'occupancy_map_yaml_file': lu.if_else_substitution(launch_map_server, args.map_yaml_path, ''),
+                'enable_wheel_odometry': enable_wheel_odometry,
             },
         ))
 
@@ -218,9 +278,11 @@ def generate_launch_description() -> LaunchDescription:
                 'map_yaml_path': args.map_yaml_path,
                 'navigation_parameters_path': navigation_parameters_path,
                 'enable_3d_lidar_localization': args.enable_3d_lidar_localization,
+                'use_sim_time': is_sim,
             },
-            condition=IfCondition(enable_global_navigation),
+            condition=IfCondition(enable_lidar_localization),
         ))
+    # Publish an identity transformation from map to global_frame if no global localization is provided.
     actions.append(
         lu.static_transform(
             'map',

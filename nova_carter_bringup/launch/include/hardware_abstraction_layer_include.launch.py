@@ -44,6 +44,7 @@ def generate_launch_description() -> LaunchDescription:
             'nova_carter_bringup',
             'launch/include/teleop_include.launch.py',
             condition=IfCondition(is_real_world),
+            scoped=True,
         ))
 
     return LaunchDescription(actions)

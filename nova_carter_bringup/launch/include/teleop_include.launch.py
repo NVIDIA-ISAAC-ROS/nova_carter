@@ -23,6 +23,7 @@ from isaac_ros_launch_utils.all_types import *
 def generate_launch_description() -> LaunchDescription:
     args = lu.ArgumentContainer()
     args.add_arg('enable_wheel_odometry', True, cli=True)
+    args.add_arg('namespace', 'chassis', cli=True)
     actions = args.get_launch_actions()
 
     actions.append(
@@ -30,6 +31,7 @@ def generate_launch_description() -> LaunchDescription:
             'nova_carter_bringup',
             'launch/include/segway_include.launch.py',
             launch_arguments={
+                'namespace': args.namespace,
                 'enable_wheel_odometry': args.enable_wheel_odometry,
             },
         ))

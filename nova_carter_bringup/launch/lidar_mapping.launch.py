@@ -42,13 +42,17 @@ def generate_launch_description() -> LaunchDescription:
 
     actions.append(
         lu.include(
+            'isaac_ros_perceptor_bringup',
+            'launch/algorithms/lidar_processing.launch.py',
+        ))
+
+    actions.append(
+        lu.include(
             'slam_toolbox',
             'launch/online_async_launch.py',
             launch_arguments={
                 'slam_params_file': args.lidar_mapping_parameters_path,
             },
         ))
-
-    actions.append(lu.component_container('nova_container'))
 
     return LaunchDescription(actions)

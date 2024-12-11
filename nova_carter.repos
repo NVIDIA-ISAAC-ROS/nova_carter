@@ -1,4 +1,8 @@
 repositories:
+  isaac_manipulator:
+    type: git
+    url: https://github.com/NVIDIA-ISAAC-ROS/isaac_manipulator.git
+    version: main
   isaac_perceptor:
     type: git
     url: https://github.com/NVIDIA-ISAAC-ROS/isaac_perceptor.git
@@ -35,6 +39,10 @@ repositories:
     type: git
     url: https://github.com/NVIDIA-ISAAC-ROS/isaac_ros_image_segmentation.git
     version: main
+  isaac_ros_compression:
+    type: git
+    url: https://github.com/NVIDIA-ISAAC-ROS/isaac_ros_compression.git
+    version: main
   isaac_ros_map_localization:
     type: git
     url: https://github.com/NVIDIA-ISAAC-ROS/isaac_ros_map_localization.git
@@ -59,10 +67,14 @@ repositories:
     type: git
     url: https://github.com/NVIDIA-ISAAC-ROS/isaac_ros_visual_slam.git
     version: main
+  isaac_ros_mapping_and_localization:
+    type: git
+    url: https://github.com/NVIDIA-ISAAC-ROS/isaac_ros_mapping_and_localization.git
+    version: main
   magic_enum:
     type: git
     url: https://github.com/Neargye/magic_enum.git
-    version: master
+    version: v0.9.6
   opennav_docking:
     type: git
     url: https://github.com/open-navigation/opennav_docking.git
@@ -75,3 +87,7 @@ repositories:
     type: git
     url: https://github.com/SteveMacenski/spatio_temporal_voxel_layer
     version: ros2
+  foxglove/schemas:
+    type: git
+    url: https://github.com/foxglove/schemas
+    version: main

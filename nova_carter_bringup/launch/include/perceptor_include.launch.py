@@ -18,70 +18,7 @@
 # flake8: noqa: F403,F405
 import isaac_ros_launch_utils as lu
 from isaac_ros_launch_utils.all_types import *
-
-# Camera config string is a subset of:
-# - driver,rectify,ess_full,ess_light,ess_skip_frames,cuvslam,nvblox
-perceptor_configurations = {
-    'no_cameras': {
-        'front_stereo_camera': '',
-        'back_stereo_camera': '',
-        'left_stereo_camera': '',
-        'right_stereo_camera': '',
-    },
-    'front_configuration': {
-        'front_stereo_camera': 'driver,rectify,ess_full,cuvslam,nvblox',
-        'back_stereo_camera': '',
-        'left_stereo_camera': '',
-        'right_stereo_camera': '',
-    },
-    'front_people_configuration': {
-        'front_stereo_camera': 'driver,rectify,ess_full,cuvslam,nvblox_people',
-        'back_stereo_camera': '',
-        'left_stereo_camera': '',
-        'right_stereo_camera': '',
-    },
-    'front_left_right_configuration': {
-        'front_stereo_camera': 'driver,rectify,ess_full,cuvslam,nvblox',
-        'back_stereo_camera': '',
-        'left_stereo_camera': 'driver,rectify,ess_light,ess_skip_frames,cuvslam,nvblox',
-        'right_stereo_camera': 'driver,rectify,ess_light,ess_skip_frames,cuvslam,nvblox',
-    },
-    'front_left_right_people_configuration': {
-        'front_stereo_camera': 'driver,rectify,ess_full,cuvslam,nvblox_people',
-        'back_stereo_camera': '',
-        'left_stereo_camera': 'driver,rectify,ess_light,ess_skip_frames,cuvslam,nvblox',
-        'right_stereo_camera': 'driver,rectify,ess_light,ess_skip_frames,cuvslam,nvblox',
-    },
-    'front_driver_rectify': {
-        'front_stereo_camera': 'driver,rectify',
-        'back_stereo_camera': '',
-        'left_stereo_camera': '',
-        'right_stereo_camera': '',
-    },
-    'front_left_right_configuration_nodriver': {
-        'front_stereo_camera': 'ess_full,cuvslam,nvblox',
-        'back_stereo_camera': '',
-        'left_stereo_camera': 'ess_light,ess_skip_frames,cuvslam,nvblox',
-        'right_stereo_camera': 'ess_light,ess_skip_frames,cuvslam,nvblox',
-    },
-    'front_back_left_right_vo_configuration': {
-        'front_stereo_camera': 'driver,cuvslam',
-        'back_stereo_camera': 'driver,cuvslam',
-        'left_stereo_camera': 'driver,cuvslam',
-        'right_stereo_camera': 'driver,cuvslam',
-    },
-}
-
-
-def remove_cuvslam_from_configuration(perceptor_configuration: Substitution):
-    # Removing cuvslam steps from the perceptor configuration.
-    return lu.remove_substring_from_dict_values(perceptor_configuration, 'cuvslam')
-
-
-def remove_nvblox_from_configuration(perceptor_configuration: Substitution):
-    # Removing ess and nvblox steps from the perceptor configuration.
-    return lu.remove_substrings_from_dict_values(
-        perceptor_configuration, ['ess_full', 'ess_light', 'ess_skip_frames', 'nvblox'])
+import isaac_ros_perceptor_python_utils.launch_utils as pu
 
 
 def generate_launch_description() -> LaunchDescription:
@@ -89,32 +26,28 @@ def generate_launch_description() -> LaunchDescription:
 
     # String specifying the stereo camera configuration.
     args.add_arg('stereo_camera_configuration')
-    args.add_arg('global_frame')
+    args.add_arg('nvblox_global_frame', 'odom')
+    args.add_arg('vslam_map_frame', 'map')
+    args.add_arg('vslam_odom_frame', 'odom')
     args.add_arg('vslam_image_qos')
     args.add_arg('disable_cuvslam', False)
     args.add_arg('disable_nvblox', False)
+    args.add_arg('disable_vgl', True)
+    args.add_arg('nvblox_param_filename', 'params/nvblox_perceptor.yaml')
+    args.add_arg('nvblox_after_shutdown_map_save_path', '')
+    args.add_arg('occupancy_map_yaml_file', '')
+    args.add_arg('is_sim', False)
     actions = args.get_launch_actions()
 
-    perceptor_configuration = lu.get_dict_value(str(perceptor_configurations),
-                                                args.stereo_camera_configuration)
+    perceptor_configuration, loggings = pu.load_perceptor_configuration(
+        args.stereo_camera_configuration, args.disable_cuvslam, args.disable_nvblox, args.disable_vgl)
 
-    # Remove cuvslam if cuvslam is disabled (e.g. when enabling wheel odometry).
-    perceptor_configuration = lu.if_else_substitution(
-        args.disable_cuvslam, remove_cuvslam_from_configuration(perceptor_configuration),
-        perceptor_configuration)
-    actions.append(lu.log_info("Disabling cuvslam.", IfCondition(args.disable_cuvslam)))
-
-    # Remove nvblox (and ESS) if nvblox is disabled.
-    perceptor_configuration = lu.if_else_substitution(
-        args.disable_nvblox, remove_nvblox_from_configuration(perceptor_configuration),
-        perceptor_configuration)
-    actions.append(lu.log_info("Disabling nvblox.", IfCondition(args.disable_nvblox)))
+    actions.extend(loggings)
 
     enabled_stereo_cameras_drivers = lu.get_keys_with_substring_in_value(
         perceptor_configuration, 'driver')
     enable_people_segmentation = lu.dict_values_contain_substring(perceptor_configuration,
                                                                   'nvblox_people')
-
     actions.append(
         lu.include(
             'nova_carter_bringup',
@@ -131,8 +64,14 @@ def generate_launch_description() -> LaunchDescription:
             'launch/perceptor_general.launch.py',
             launch_arguments={
                 'perceptor_configuration': perceptor_configuration,
-                'global_frame': args.global_frame,
+                'nvblox_global_frame': args.nvblox_global_frame,
+                'vslam_odom_frame': args.vslam_odom_frame,
+                'vslam_map_frame': args.vslam_map_frame,
+                'nvblox_param_filename': args.nvblox_param_filename,
+                'nvblox_after_shutdown_map_save_path': args.nvblox_after_shutdown_map_save_path,
                 'vslam_image_qos': args.vslam_image_qos,
+                'is_sim': args.is_sim,
+                'occupancy_map_yaml_file': args.occupancy_map_yaml_file,
             },
         ))
 
