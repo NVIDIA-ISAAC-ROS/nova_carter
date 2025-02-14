@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>nova_carter_bringup</name>
-  <version>3.2.0</version>
+  <version>3.2.4</version>
   <description>
     Launch files to run isaac ros apps on the Nova Carter robot.
   </description>
