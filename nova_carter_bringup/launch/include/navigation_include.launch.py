@@ -31,8 +31,9 @@ def set_override_parameters(args: lu.ArgumentContainer) -> list[Action]:
     #   - A mixture of nvblox, 2D, and 3D LiDAR
     # - Isaac Sim Carter
     #   - nvblox
+    # - MEGA
+    #   - A mixture of nvblox, 2D, and 3D LiDAR
     enable_global_navigation = lu.is_valid(args.map_yaml_path)
-
     if enable_global_navigation:
         print('Enabling global navigation.')
         global_costmap_plugins.append('static_map_layer')
@@ -64,6 +65,7 @@ def set_override_parameters(args: lu.ArgumentContainer) -> list[Action]:
             odometry_topic = '/chassis/odom'
         else:
             odometry_topic = '/visual_slam/tracking/odometry'
+
 
     local_costmap_plugins += ['inflation_layer']
     global_costmap_plugins += ['inflation_layer']
@@ -129,24 +131,21 @@ def rewrite_navigation_parameters_for_sim(navigation_parameters_path: LaunchConf
                          param_rewrites=param_substitutions,
                          convert_types=True)
 
+def rewrite_init_pose(
+    navigation_parameters_path: LaunchConfiguration,
+    x: LaunchConfiguration, 
+    y: LaunchConfiguration, 
+    yaw: LaunchConfiguration) -> RewrittenYaml:
+    # If set_init_pose is True, rewrite the amcl config
+    param_substitutions = {'set_initial_pose': 'True', 'x': x, 'y': y, 'yaw': yaw}
+    return RewrittenYaml(source_file=navigation_parameters_path,
+                         root_key='',
+                         param_rewrites=param_substitutions,
+                         convert_types=True)
+
+
 
 def check_args(args: lu.ArgumentContainer):
-    # Some of are arguments are not supported when running in Isaac Sim.
-    # This function checks the passed arguments.
-    if args.mode == 'simulation':
-        if (args.enable_2d_lidar_costmap == True):
-            print("Navigation with 2D LiDAR not supported yet in sim. 2D LiDARs will not be used.")
-        if (args.enable_3d_lidar_costmap == True):
-            print("Navigation with 3D LiDAR not supported yet in sim. 3D LiDARs will not be used.")
-        assert (
-            args.map_yaml_path or not args.global_frame == 'odom'
-        ), "Tried to use odom as the global frame but no map yaml path was provided. This will "
-        "cause collisions between the Isaac Sim supplied GT pose and cuVSLAM. Please use another "
-        "global frame name."
-        valid_sim_configs = ['front_configuration', 'front_left_right_configuration']
-        assert (args.stereo_camera_configuration in valid_sim_configs
-                ), f"stereo_camera_configuration:={args.stereo_camera_configuration} " \
-            f"not supported in Isaac Sim. Valid configurations are {valid_sim_configs}."
     # Wheel odometry or stereo cameras have to be enabled.
     # Otherwise the robot will not have any odometry source
     assert (args.enable_wheel_odometry == True or args.stereo_camera_configuration
@@ -163,16 +162,24 @@ def generate_launch_description() -> LaunchDescription:
     args.add_arg('map_yaml_path')
     args.add_arg('enable_navigation')
     args.add_arg('enable_mission_client')
+    args.add_arg('enable_docking', False)
     args.add_arg('enable_3d_lidar_costmap')
     args.add_arg('enable_2d_lidar_costmap')
     args.add_arg('enable_nvblox_costmap')
     args.add_arg('enable_wheel_odometry')
     args.add_arg('enable_3d_lidar_localization')
     args.add_arg('enable_visual_localization')
+    args.add_arg('set_init_pose', False)
+    args.add_arg('init_pose_x', '0.0')
+    args.add_arg('init_pose_y', '0.0')
+    args.add_arg('init_pose_yaw', '0.0')
 
     args.add_opaque_function(check_args)
 
-    is_sim = lu.is_equal(args.mode, 'simulation')
+    is_sim = OrSubstitution(
+        lu.is_equal(args.mode, 'simulation'),
+        lu.is_equal(args.mode, 'mega')
+    )
 
     enable_global_navigation = lu.is_valid(args.map_yaml_path)
 
@@ -220,6 +227,11 @@ def generate_launch_description() -> LaunchDescription:
         run_local_navigation_in_sim,
         rewrite_navigation_parameters_for_sim(args.navigation_parameters_path, args.global_frame),
         args.navigation_parameters_path)
+
+    navigation_parameters_path = lu.if_else_substitution(
+        args.set_init_pose,
+        rewrite_init_pose(navigation_parameters_path, args.init_pose_x, args.init_pose_y, args.init_pose_yaw),
+        navigation_parameters_path)
 
     # Launch a map server only when map is provided and lidar_localization.launch.py is not included
     launch_map_server = AndSubstitution(lu.NotSubstitution(
@@ -279,6 +291,7 @@ def generate_launch_description() -> LaunchDescription:
                 'navigation_parameters_path': navigation_parameters_path,
                 'enable_3d_lidar_localization': args.enable_3d_lidar_localization,
                 'use_sim_time': is_sim,
+                'set_init_pose': args.set_init_pose,
             },
             condition=IfCondition(enable_lidar_localization),
         ))
@@ -298,6 +311,7 @@ def generate_launch_description() -> LaunchDescription:
             launch_arguments={
                 'navigation_parameters_path': navigation_parameters_path,
                 'enable_mission_client': args.enable_mission_client,
+                'enable_docking': args.enable_docking,
             },
             condition=IfCondition(args.enable_navigation),
         ))

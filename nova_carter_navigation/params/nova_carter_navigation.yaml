@@ -109,6 +109,14 @@ amcl:
     z_max: 0.05
     z_rand: 0.4
     z_short: 0.05
+    set_initial_pose: false
+    always_reset_initial_pose: false
+    initial_pose:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+      yaw: 0.0
+
 bt_navigator:
   ros__parameters:
     use_sim_time: True
@@ -296,6 +304,10 @@ local_costmap:
       mark_threshold: 2
       always_send_full_costmap: True
       plugins: [TO_BE_OVERRIDDEN]
+      static_map_layer:
+        plugin: "nav2_costmap_2d::StaticLayer"
+        map_subscribe_transient_local: True
+        enabled: true
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         enabled: True
@@ -421,6 +433,46 @@ global_costmap:
         nav2_costmap_global_frame: map # must match with global_frame of global_costmap
         nvblox_map_slice_topic: "/nvblox_node/static_map_slice"
         convert_to_binary_costmap: True
+      3d_lidar_layer:
+        plugin: "spatio_temporal_voxel_layer/SpatioTemporalVoxelLayer"
+        enabled: true
+        voxel_decay: 15.0 # seconds if linear, e^n if exponential
+        decay_model: 0 # 0=linear, 1=exponential, -1=persistent
+        voxel_size: 0.05 # meters
+        track_unknown_space: False # default space is known
+        mark_threshold: 2 # voxel height
+        update_footprint_enabled: true
+        combination_method: 1 # 1=max, 0=override
+        origin_z: 0.0 # meters
+        publish_voxel_map: true # default off
+        transform_tolerance: 0.2 # seconds
+        observation_sources: hesai_mark hesai_clear
+        hesai_mark:
+          data_type: PointCloud2
+          topic: /front_3d_lidar/lidar_points
+          marking: true
+          clearing: false
+          obstacle_range: 3.0 # meters
+          min_obstacle_height: 0.1 # default 0, meters
+          max_obstacle_height: 1.5 # default 3, meters
+          expected_update_rate: 0.0 # default 0, if not updating at this rate at least, remove from buffer
+          observation_persistence: 0.0 # default 0, use all measurements taken during now-value, 0=latest
+          inf_is_valid: false # default false, for laser scans
+          filter: "voxel" # default passthrough, apply "voxel", "passthrough", or no filter to sensor data, recommend on     voxel_min_points: 0          # default 0, minimum points per voxel for voxel filter
+          clear_after_reading: true # default false, clear the buffer after the layer gets readings from it
+        hesai_clear:
+          enabled: true #default true, can be toggled on/off with associated service call
+          data_type: PointCloud2
+          topic: /front_3d_lidar/lidar_points
+          marking: false
+          clearing: true
+          max_z: 20.0 # default 0, meters
+          min_z: 0.05 # default 10, meters
+          vertical_fov_angle: 1.15 # Note: This the full fov.
+          vertical_fov_padding: 0.05 # 3D Lidar only. Default 0, in meters
+          horizontal_fov_angle: 6.29 # 3D lidar scanners like the VLP16 have 360 deg horizontal FOV.
+          decay_acceleration: 5.0 # default 0, 1/s^2.
+          model_type: 1 # default 0, model type for frustum. 0=depth camera, 1=3d lidar like VLP16 or similar
 map_server:
   ros__parameters:
     use_sim_time: True

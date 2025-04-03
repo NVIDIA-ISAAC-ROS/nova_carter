@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>nova_carter_navigation</name>
-  <version>3.2.5</version>
+  <version>3.2.6</version>
   <description>
      Configuration to use ROS2 Nav2 with the Nova Carter robot.
   </description>
@@ -46,6 +46,7 @@
   <exec_depend>custom_nitros_image</exec_depend>
   <exec_depend>isaac_ros_vda5050_nav2_client_bringup</exec_depend>
   <exec_depend>isaac_ros_apriltag</exec_depend>
+  <exec_depend>spatio_temporal_voxel_layer</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>nova_carter_bringup</name>
-  <version>3.2.5</version>
+  <version>3.2.6</version>
   <description>
     Launch files to run isaac ros apps on the Nova Carter robot.
   </description>
@@ -26,6 +26,7 @@
   <exec_depend>isaac_ros_perceptor_python_utils</exec_depend>
   <exec_depend>isaac_ros_segway_rmp</exec_depend>
   <exec_depend>isaac_ros_vda5050_nav2_client_bringup</exec_depend>
+  <exec_depend>isaac_ros_mega_node_monitor</exec_depend>
   <exec_depend>joy_linux</exec_depend>
   <exec_depend>launch</exec_depend>
   <exec_depend>launch_ros</exec_depend>
@@ -35,6 +36,7 @@
   <exec_depend>opennav_docking</exec_depend>
   <exec_depend>teleop_twist_joy</exec_depend>
   <exec_depend>twist_mux</exec_depend>
+  <exec_depend>isaac_ros_mega_controller</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

@@ -30,6 +30,7 @@ def generate_launch_description() -> lut.LaunchDescription:
     args.add_arg('map_yaml_path', 'None', cli=True)
     args.add_arg('enable_navigation', True, cli=True)
     args.add_arg('enable_mission_client', False, cli=True)
+    args.add_arg('enable_docking', False, cli=True)
     args.add_arg('enable_3d_lidar_costmap', False, cli=True)
     args.add_arg('enable_2d_lidar_costmap', True, cli=True)
     args.add_arg('enable_nvblox_costmap', True, cli=True)
