@@ -26,6 +26,7 @@ def generate_launch_description() -> LaunchDescription:
     args.add_arg('navigation_parameters_path')
     args.add_arg('container_name', 'navigation_container')
     args.add_arg('type_negotiation_duration_s')
+    args.add_arg('set_init_pose', False)
 
     actions = args.get_launch_actions()
 
@@ -43,12 +44,18 @@ def generate_launch_description() -> LaunchDescription:
             },
         ))
 
-    actions.append(lu.log_info('Enabling occupancy grid localizer.'))
+    actions.append(
+        lu.log_info(
+            'Enabling occupancy grid localizer.',
+            condition=IfCondition(lu.NotSubstitution(args.set_init_pose))
+        ))
+
     actions.append(
         lu.include(
             'isaac_ros_perceptor_bringup',
             'launch/algorithms/occupancy_grid_localizer.launch.py',
             launch_arguments={'map_yaml_path': args.map_yaml_path},
+            condition=IfCondition(lu.NotSubstitution(args.set_init_pose)),
         ))
 
     actions.append(
@@ -56,7 +63,7 @@ def generate_launch_description() -> LaunchDescription:
             service='/trigger_grid_search_localization ',
             type='std_srvs/srv/Empty ',
             content='"{}"',
-            delay=PythonExpression([args.type_negotiation_duration_s, ' + 15.0']),
+            delay=PythonExpression([args.type_negotiation_duration_s, ' + 15.0'])
         ))
 
     return LaunchDescription(actions)

@@ -23,6 +23,7 @@ from isaac_ros_launch_utils.all_types import *
 def generate_launch_description() -> LaunchDescription:
     args = lu.ArgumentContainer()
     args.add_arg('enable_mission_client')
+    args.add_arg('enable_docking')
     args.add_arg('navigation_parameters_path')
     args.add_arg('navigation_container_name', 'navigation_container')
     args.add_arg('use_sim_time', False)
@@ -50,7 +51,7 @@ def generate_launch_description() -> LaunchDescription:
             'isaac_ros_vda5050_nav2_client_bringup',
             'launch/isaac_ros_vda5050_client.launch.py',
             launch_arguments={
-                'docking_server_enabled': 'True',
+                'docking_server_enabled': args.enable_docking,
             },
             condition=IfCondition(args.enable_mission_client),
         ))
@@ -68,7 +69,7 @@ def generate_launch_description() -> LaunchDescription:
         parameters=[{
             'initial_switch_state': False
         }],
-        condition=IfCondition(args.enable_mission_client),
+        condition=IfCondition(args.enable_docking),
     )
     apriltag_node = ComposableNode(
         package='isaac_ros_apriltag',
@@ -76,7 +77,7 @@ def generate_launch_description() -> LaunchDescription:
         name='apriltag',
         remappings=[('image', '/front_stereo_camera/left/switched_image_rect'),
                     ('camera_info', '/front_stereo_camera/left/switched_camera_info_rect')],
-        condition=IfCondition(args.enable_mission_client),
+        condition=IfCondition(args.enable_docking),
         parameters=[{
             'size': 0.1524,  # 6 inches
             'max_tags': 4,
@@ -86,7 +87,7 @@ def generate_launch_description() -> LaunchDescription:
     load_nodes = lu.load_composable_nodes(
         args.navigation_container_name,
         [switch_node, apriltag_node],
-        condition=IfCondition(args.enable_mission_client),
+        condition=IfCondition(args.enable_docking),
     )
     actions.append(load_nodes)
 
@@ -96,7 +97,7 @@ def generate_launch_description() -> LaunchDescription:
         name='docking_server',
         output='screen',
         parameters=[str(lu.get_path('nova_carter_docking', 'params/nova_carter_docking.yaml'))],
-        condition=IfCondition(args.enable_mission_client),
+        condition=IfCondition(args.enable_docking),
     )
 
     lifecycle_manager = Node(
@@ -109,7 +110,7 @@ def generate_launch_description() -> LaunchDescription:
         }, {
             'node_names': ['docking_server']
         }],
-        condition=IfCondition(args.enable_mission_client),
+        condition=IfCondition(args.enable_docking),
     )
 
     dock_pose_publisher = Node(
@@ -120,7 +121,7 @@ def generate_launch_description() -> LaunchDescription:
             'use_first_detection': True,
             'dock_tag_id': 586,
         }],
-        condition=IfCondition(args.enable_mission_client),
+        condition=IfCondition(args.enable_docking),
     )
     actions.extend([docking_server, lifecycle_manager, dock_pose_publisher])
 
