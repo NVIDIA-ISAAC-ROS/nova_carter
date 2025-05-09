@@ -83,10 +83,6 @@ repositories:
     type: git
     url: https://github.com/Slamtec/sllidar_ros2.git
     version: main
-  spatio_temporal_voxel_layer:
-    type: git
-    url: https://github.com/SteveMacenski/spatio_temporal_voxel_layer
-    version: ros2
   foxglove/schemas:
     type: git
     url: https://github.com/foxglove/schemas
