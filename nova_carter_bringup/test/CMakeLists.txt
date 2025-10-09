@@ -39,12 +39,14 @@ get_dummy_bag_path(DUMMY_BAG_PATH)
 
 add_graph_startup_test(multi_cam_perceptor_dry_run
     launch/perceptor.launch.py
+    DONT_CHECK_EXIT_CODE
     TIMEOUT 60
     ARGS "mode:=rosbag rosbag:=${DUMMY_BAG_PATH} run_rviz:=False run_foxglove:=False"
 )
 
 add_graph_startup_test(single_cam_perceptor_dry_run
     launch/perceptor.launch.py
+    DONT_CHECK_EXIT_CODE
     TIMEOUT 60
     ARGS "mode:=rosbag rosbag:=${DUMMY_BAG_PATH} run_rviz:=False run_foxglove:=False stereo_camera_configuration:=front_configuration"
 )

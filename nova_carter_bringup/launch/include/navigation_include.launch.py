@@ -271,7 +271,7 @@ def generate_launch_description() -> LaunchDescription:
                 'vslam_publish_map_to_odom_tf': lu.is_false(enable_lidar_localization),
                 'nvblox_global_frame': args.global_frame,
                 'vslam_image_qos': args.vslam_image_qos,
-                'invert_odom_to_base_tf': is_sim,
+                'invert_odom_to_base_tf': lu.is_true(is_sim), #Gets the boolean value
                 'disable_cuvslam': disable_cuvslam,
                 'disable_nvblox': lu.is_false(args.enable_nvblox_costmap),
                 'is_sim': is_sim,
